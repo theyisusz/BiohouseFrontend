@@ -1,0 +1,136 @@
+<!-- HEADER -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+
+      <!-- LOGO -->
+      <div class="flex items-center gap-6">
+        <img src="assets/logo.png" class="w-24 object-contain" />
+
+        <div class="hidden md:block border-l border-gray-200 pl-6">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700">
+            Sistema de Cotización
+          </h2>
+          <p class="text-xs text-gray-400 font-medium">
+            Arquitectura Sostenible 3D
+          </p>
+        </div>
+      </div>
+
+      <!-- MENU USUARIO -->
+      <div class="relative">
+
+        <button (click)="toggleMenu()"
+          class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 transition-all">
+
+          <!-- Avatar -->
+          <div class="w-9 h-9 rounded-full bg-gradient-to-r from-[#34a853] to-[#b4d435]
+                      text-white flex items-center justify-center font-bold shadow-md">
+            J
+          </div>
+
+          <!-- Info -->
+          <div class="hidden sm:block text-left">
+            <p class="text-sm font-semibold text-gray-800">Juan Pérez</p>
+            <p class="text-xs text-gray-500">Panel de usuario</p>
+          </div>
+
+          <!-- Flecha -->
+          <svg class="w-4 h-4 text-gray-400 transition-transform"
+               [class.rotate-180]="menuOpen"
+               fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div *ngIf="menuOpen"
+             class="fixed inset-0 z-40"
+              (click)="menuOpen = false"></div>
+        <!-- DROPDOWN -->
+        <div *ngIf="menuOpen"
+          class="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 animate-fadeIn">
+
+          <!-- INFO -->
+          <div class="px-4 py-3 border-b border-gray-100">
+            <p class="text-sm font-bold text-gray-800">Juan Pérez</p>
+            <p class="text-xs text-[#34a853]">juan.perez@ejemplo.com</p>
+          </div>
+
+          <!-- OPCIONES -->
+          <div class="py-2">
+
+            <button (click)="goToDesigner()" class="menu-item">
+              <span>🏠 Proyecto</span>
+            </button>
+
+            <button (click)="goToProjects()" class="menu-item">
+              <span>📄 Mis Proyectos</span>
+            </button>
+
+            <button (click)="goToProfile()" class="menu-item">
+               <span>👤 Perfil</span>
+            </button>
+
+            <button class="menu-item">
+              <span>⚙️ Configuración</span>
+            </button>
+
+          </div>
+
+          <!-- LOGOUT -->
+          <div class="border-t border-gray-100">
+            <button (click)="openLogoutModal()"
+              class="menu-item text-red-500 hover:bg-red-50">
+               <span>⎋ Cerrar sesión</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+<!-- MODAL LOGOUT -->
+<div *ngIf="showLogoutModal"
+     class="fixed inset-0 flex items-center justify-center z-50">
+
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+       (click)="cancelLogout()"></div>
+
+  <!-- Card -->
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fadeIn">
+
+    <!-- Header verde -->
+    <div class="bg-gradient-to-r from-[#34a853] to-[#b4d435] 
+                rounded-xl p-4 text-white mb-4">
+      <h2 class="text-lg font-bold">Cerrar sesión</h2>
+    </div>
+
+    <!-- Texto -->
+    <p class="text-gray-600 text-sm mb-6">
+      ¿Estás seguro de que deseas cerrar sesión?
+    </p>
+
+    <!-- Botones -->
+    <div class="flex justify-end gap-3">
+
+      <!-- Cancelar -->
+      <button (click)="cancelLogout()"
+        class="px-4 py-2 rounded-lg border border-gray-200 text-gray-600
+               hover:bg-gray-100 transition">
+        No
+      </button>
+
+      <!-- Confirmar -->
+      <button (click)="confirmLogout()"
+        class="px-4 py-2 rounded-lg text-white font-semibold
+               bg-gradient-to-r from-[#34a853] to-[#b4d435]
+               hover:brightness-110 transition shadow-md">
+        Sí, salir
+      </button>
+
+    </div>
+
+  </div>
+</div>

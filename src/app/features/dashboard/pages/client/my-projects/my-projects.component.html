@@ -1,0 +1,98 @@
+<div class="projects-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="projects-header">
+    <div>
+      <h1 class="projects-title">Mis Proyectos</h1>
+      <p class="projects-subtitle">Tienes {{ projects.length }} proyectos en total</p>
+    </div>
+    <button class="btn-new" (click)="goToNewProject()">+ Nuevo proyecto</button>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar proyectos..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <select [(ngModel)]="selectedStatus" class="search-input">
+        <option value="">Todos los estados</option>
+        <option value="Completado">Completado</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Borrador">Borrador</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- GRID DE PROYECTOS -->
+  <div class="projects-grid">
+    <div class="project-card animate-fade"
+         *ngFor="let project of filteredProjects">
+
+      <!-- CARD HEADER -->
+      <div class="card-header">
+        <h3 class="project-name">{{ project.name }}</h3>
+        <span class="badge" [ngClass]="getBadgeClass(project.status)">
+          {{ project.status }}
+        </span>
+      </div>
+
+      <!-- DATOS -->
+      <div class="project-data">
+        <div class="data-item">
+          <span class="data-icon">🏠</span>
+          <span class="data-label">Metros cuadrados</span>
+          <span class="data-value">{{ project.area }} m²</span>
+        </div>
+        <div class="data-item">
+          <span class="data-icon">🏢</span>
+          <span class="data-label">Número de pisos</span>
+          <span class="data-value">{{ project.floors }} piso(s)</span>
+        </div>
+        <div class="data-item">
+          <span class="data-icon">📅</span>
+          <span class="data-label">Fecha estimada</span>
+          <span class="data-value">{{ project.date }}</span>
+        </div>
+        <div class="data-item">
+          <span class="data-icon">💲</span>
+          <span class="data-label">Precio estimado</span>
+          <span class="data-value">${{ project.price | number }}</span>
+        </div>
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="project-actions">
+        <button class="btn-primary">Ver diseño 3D</button>
+        <button class="btn-secondary">Exportar cotización</button>
+        <button class="btn-delete" (click)="confirmDelete(project)">🗑️</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal-overlay" *ngIf="showDeleteModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title">Eliminar proyecto</h3>
+    </div>
+    <div class="modal-text">
+      <p>¿Estás seguro de que quieres eliminar el proyecto "<strong>{{ projectToDelete?.name }}</strong>"?</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
+      <button class="btn-confirm" (click)="deleteProject()">Eliminar</button>
+    </div>
+  </div>
+</div>
