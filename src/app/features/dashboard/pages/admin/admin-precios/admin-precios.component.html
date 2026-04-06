@@ -4,13 +4,13 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">Gestión de Precios</h1>
-      <p class="page-subtitle">Administra los precios de materiales Bloqueplas</p>
+      <p class="page-subtitle">Administra el precio del material Bloqueplas</p>
     </div>
   </div>
 
-  <!-- CARDS DE MATERIALES -->
-  <div class="materiales-grid">
-    <div class="material-card" *ngFor="let material of materiales">
+  <!-- CARD ÚNICA -->
+  <div class="single-card-wrapper">
+    <div class="material-card">
 
       <!-- CARD HEADER -->
       <div class="card-header">
@@ -19,6 +19,7 @@
           <h3 class="material-nombre">{{ material.nombre }}</h3>
           <p class="material-unidad">Por {{ material.unidad }}</p>
         </div>
+        <span class="material-badge">Material principal</span>
       </div>
 
       <!-- DESCRIPCIÓN -->
@@ -27,7 +28,7 @@
       <!-- DATOS -->
       <div class="material-datos">
         <div class="dato-item">
-          <span class="dato-label">Precio unitario</span>
+          <span class="dato-label">Precio unitario actual</span>
           <span class="dato-value precio">${{ material.precioUnitario | number }}</span>
         </div>
         <div class="dato-item">
@@ -38,7 +39,7 @@
 
       <!-- ACCIÓN -->
       <div class="card-footer">
-        <button class="btn-editar" (click)="openEditModal(material)">
+        <button class="btn-editar" (click)="openEditModal()">
           ✏️ Editar precio
         </button>
       </div>
@@ -52,23 +53,23 @@
     <div class="modal-card animate-fade">
 
       <div class="modal-header-green">
-        <h2 class="modal-title">Editar precio</h2>
+        <h2 class="modal-title">Editar precio — Bloqueplas</h2>
       </div>
 
-      <div class="modal-body" *ngIf="materialToEdit">
+      <div class="modal-body">
 
         <div class="modal-material-name">
           <span class="modal-icon">🧱</span>
           <div>
-            <p class="modal-nombre">{{ materialToEdit.nombre }}</p>
-            <p class="modal-unidad">Por {{ materialToEdit.unidad }}</p>
+            <p class="modal-nombre">{{ material.nombre }}</p>
+            <p class="modal-unidad">Por {{ material.unidad }}</p>
           </div>
         </div>
 
         <!-- PRECIO ACTUAL -->
         <div class="precio-actual">
           <span class="precio-actual-label">Precio actual</span>
-          <span class="precio-actual-value">${{ materialToEdit.precioUnitario | number }}</span>
+          <span class="precio-actual-value">${{ material.precioUnitario | number }}</span>
         </div>
 
         <!-- NUEVO PRECIO -->

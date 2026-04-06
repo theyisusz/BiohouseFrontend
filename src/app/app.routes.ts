@@ -24,9 +24,14 @@ import { AdminUsuariosComponent } from './features/dashboard/pages/admin/admin-u
 import { AdminCotizacionesComponent } from './features/dashboard/pages/admin/admin-cotizaciones/admin-cotizaciones.component';
 import { AdminPreciosComponent } from './features/dashboard/pages/admin/admin-precios/admin-precios.component';
 import { NewProjectComponent } from './features/dashboard/pages/client/new-project/new-project.component';
+import { AdminAsesoresComponent } from './features/dashboard/pages/admin/admin-asesores/admin-asesores.component';
+import { AsesorCotizacionesComponent } from './features/dashboard/pages/asesor/asesor-cotizaciones/asesor-cotizaciones.component';
+import { AsesorClientesComponent } from './features/dashboard/pages/asesor/asesor-clientes/asesor-clientes.component';
+import { AsesorDashboardComponent } from './features/dashboard/pages/asesor/asesor-dashboard/asesor-dashboard.component';
+import { AsesorLayoutComponent } from './layout/asesor-layout/asesor-layout.component';
 export const routes: Routes = [
 
-  // 🌐 PÚBLICO (sin login)
+  //  PÚBLICO (sin login)
   {
     path: '',
     component: PublicLayoutComponent,
@@ -35,7 +40,7 @@ export const routes: Routes = [
     ]
   },
 
-  // 🔐 AUTH
+  // AUTH
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
@@ -59,12 +64,23 @@ export const routes: Routes = [
   children: [
     { path: 'dashboard', component: AdminDashboardComponent },
     // futuras rutas:
-       { path: 'usuarios', component: AdminUsuariosComponent },
+       { path: 'clientes', component: AdminUsuariosComponent },
+       { path: 'asesores',  component: AdminAsesoresComponent  },
        { path: 'cotizaciones', component: AdminCotizacionesComponent },
        { path: 'precios', component: AdminPreciosComponent },
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
   ]
-},          
-  // 🚫 404
+},   
+{
+  path: 'asesor',
+  component: AsesorLayoutComponent,
+  children: [
+    { path: 'dashboard',    component: AsesorDashboardComponent    },
+    { path: 'clientes',     component: AsesorClientesComponent     },
+    { path: 'cotizaciones', component: AsesorCotizacionesComponent },
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+  ]
+},       
+  //  404
   { path: '**', redirectTo: '' }
 ];

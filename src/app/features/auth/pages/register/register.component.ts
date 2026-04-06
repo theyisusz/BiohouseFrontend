@@ -23,6 +23,8 @@ export class RegisterComponent {
   registerForm: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
+  rolSeleccionado: 'CLIENTE' | 'ASESOR_COMERCIAL' | null = null;
+  rolError = false;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
@@ -48,12 +50,33 @@ export class RegisterComponent {
   toggleConfirmPassword() { this.showConfirmPassword = !this.showConfirmPassword; }
 
   goToLogin() { this.router.navigate(['/login']); }
+  selectRol(rol: 'CLIENTE' | 'ASESOR_COMERCIAL'): void {
+  this.rolSeleccionado = rol;
+  this.rolError = false;
+  }
 
   onSubmit() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
+    if (!this.rolSeleccionado) {
+    this.rolError = true;
+    return;
+  }
+  this.rolError = false;
+
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
+  }
+
+  const data = {
+    ...this.registerForm.value,
+    rol: this.rolSeleccionado
+  };
+
+  console.log('Datos de registro:', data);
     console.log('Registro:', this.registerForm.value);
     // aquí irá la llamada al microservicio de auth
   }
