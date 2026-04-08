@@ -1,0 +1,218 @@
+<div class="asesores-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Asesores Comerciales</h1>
+      <p class="page-subtitle">Gestión y aprobación de asesores registrados</p>
+    </div>
+    <div class="header-stats">
+      <div class="header-stat">
+        <span class="header-stat-value">{{ totalPendientes }}</span>
+        <span class="header-stat-label">pendientes</span>
+      </div>
+      <div class="header-stat highlight">
+        <span class="header-stat-value">{{ totalAprobados }}</span>
+        <span class="header-stat-label">aprobados</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar por nombre o correo..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+    <div class="search-box select-box">
+      <span class="search-icon">🔽</span>
+      <select [(ngModel)]="selectedEstado" class="search-input">
+        <option value="">Todos los estados</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="Aprobado">Aprobado</option>
+        <option value="Rechazado">Rechazado</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-card">
+
+    <div class="empty-state" *ngIf="filteredAsesores.length === 0">
+      <p class="empty-icon">🧑‍💼</p>
+      <p class="empty-text">No se encontraron asesores con ese criterio.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="filteredAsesores.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Asesor</th>
+            <th>Teléfono</th>
+            <th>Fecha solicitud</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let asesor of filteredAsesores">
+
+            <!-- ASESOR -->
+            <td>
+              <div class="client-info">
+                <div class="client-avatar">
+                  {{ getInitials(asesor.nombre, asesor.apellido) }}
+                </div>
+                <div>
+                  <p class="client-name">{{ asesor.nombre }} {{ asesor.apellido }}</p>
+                  <p class="client-email">{{ asesor.correo }}</p>
+                </div>
+              </div>
+            </td>
+
+            <!-- TELÉFONO -->
+            <td>
+              <span class="cell-text">{{ asesor.telefono }}</span>
+            </td>
+
+            <!-- FECHA -->
+            <td>
+              <span class="cell-text">{{ asesor.fechaSolicitud }}</span>
+            </td>
+
+            <!-- ESTADO -->
+            <td>
+              <span class="badge" [ngClass]="getBadgeClass(asesor.estado)">
+                {{ asesor.estado }}
+              </span>
+            </td>
+
+            <!-- ACCIONES -->
+            <td>
+              <div class="actions">
+                <button class="btn-action btn-detail"
+                        (click)="openDetail(asesor)"
+                        title="Ver detalle">
+                  👁️
+                </button>
+                <button class="btn-action btn-aprobar"
+                        (click)="openConfirm(asesor, 'aprobar')"
+                        title="Aprobar"
+                        [disabled]="asesor.estado === 'Aprobado'">
+                  ✅
+                </button>
+                <button class="btn-action btn-rechazar"
+                        (click)="openConfirm(asesor, 'rechazar')"
+                        title="Rechazar"
+                        [disabled]="asesor.estado === 'Rechazado'">
+                  ❌
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MODAL DETALLE -->
+  <div class="modal-overlay" *ngIf="showDetailModal">
+    <div class="modal-backdrop" (click)="closeDetail()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Detalle del asesor</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedAsesor">
+
+        <div class="detail-avatar">
+          {{ getInitials(selectedAsesor.nombre, selectedAsesor.apellido) }}
+        </div>
+        <h3 class="detail-name">
+          {{ selectedAsesor.nombre }} {{ selectedAsesor.apellido }}
+        </h3>
+        <span class="badge" [ngClass]="getBadgeClass(selectedAsesor.estado)">
+          {{ selectedAsesor.estado }}
+        </span>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Correo</span>
+            <span class="detail-value">{{ selectedAsesor.correo }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Teléfono</span>
+            <span class="detail-value">{{ selectedAsesor.telefono }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Fecha de solicitud</span>
+            <span class="detail-value">{{ selectedAsesor.fechaSolicitud }}</span>
+          </div>
+        </div>
+
+        <div class="detail-actions" *ngIf="selectedAsesor.estado === 'Pendiente'">
+          <button class="btn-rechazar-modal"
+                  (click)="closeDetail(); openConfirm(selectedAsesor!, 'rechazar')">
+            Rechazar
+          </button>
+          <button class="btn-aprobar-modal"
+                  (click)="closeDetail(); openConfirm(selectedAsesor!, 'aprobar')">
+            Aprobar
+          </button>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-close-modal" (click)="closeDetail()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMACIÓN -->
+  <div class="modal-overlay" *ngIf="showConfirmModal">
+    <div class="modal-backdrop" (click)="closeConfirm()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green" [class.modal-header-red]="confirmAction === 'rechazar'">
+        <h2 class="modal-title">
+          {{ confirmAction === 'aprobar' ? 'Aprobar asesor' : 'Rechazar asesor' }}
+        </h2>
+      </div>
+
+      <div class="modal-body" *ngIf="asesorToAction">
+        <p class="confirm-text">
+          ¿Estás seguro de que deseas
+          <strong>{{ confirmAction === 'aprobar' ? 'aprobar' : 'rechazar' }}</strong>
+          a <strong>{{ asesorToAction.nombre }} {{ asesorToAction.apellido }}</strong>?
+        </p>
+        <p class="confirm-sub" *ngIf="confirmAction === 'aprobar'">
+          El asesor podrá acceder al sistema y gestionar clientes.
+        </p>
+        <p class="confirm-sub" *ngIf="confirmAction === 'rechazar'">
+          El asesor no podrá acceder al sistema.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-save-modal"
+                [class.btn-danger]="confirmAction === 'rechazar'"
+                (click)="executeAction()">
+          {{ confirmAction === 'aprobar' ? 'Sí, aprobar' : 'Sí, rechazar' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

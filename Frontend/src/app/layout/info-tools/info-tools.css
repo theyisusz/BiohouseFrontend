@@ -1,0 +1,137 @@
+.animate-fade {
+  animation: fadeInUp 0.4s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.info-tools-container {
+  background: white;
+  border: 1px solid #e8edf2;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+/* HEADER */
+.info-header {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.info-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.3rem;
+}
+
+.info-subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* TOOLS GRID */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: white;
+  transition: background 0.2s;
+}
+
+.tool-card:hover {
+  background: #f0fdf4;
+}
+
+.tool-icon {
+  width: 44px;
+  height: 44px;
+  background: #f0fdf4;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #dcfce7;
+}
+
+.tool-icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.tool-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.2rem;
+}
+
+.tool-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* CTA */
+.cta-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(to right, rgba(52,168,83,0.06), rgba(180,212,53,0.06));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .cta-section {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.cta-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.25rem;
+}
+
+.cta-desc {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.btn-create {
+  background: linear-gradient(to right, #34a853, #b4d435);
+  color: white;
+  border: none;
+  padding: 0.85rem 2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(52,168,83,0.35);
+}
+
+.btn-create:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52,168,83,0.4);
+}

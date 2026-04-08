@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-login',
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  
 
   loginForm: FormGroup;
   showPassword = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
       email: [
         '',
@@ -47,4 +48,5 @@ export class LoginComponent {
     console.log('Login correcto:', this.loginForm.value);
     // aquí irá la llamada al microservicio de auth
   }
+  goToHome() { this.router.navigate(['/home']); }
 }

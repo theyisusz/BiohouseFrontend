@@ -1,0 +1,109 @@
+<div class="precios-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestión de Precios</h1>
+      <p class="page-subtitle">Administra el precio del material Bloqueplas</p>
+    </div>
+  </div>
+
+  <!-- CARD ÚNICA -->
+  <div class="single-card-wrapper">
+    <div class="material-card">
+
+      <!-- CARD HEADER -->
+      <div class="card-header">
+        <div class="material-icon">🧱</div>
+        <div class="material-info">
+          <h3 class="material-nombre">{{ material.nombre }}</h3>
+          <p class="material-unidad">Por {{ material.unidad }}</p>
+        </div>
+        <span class="material-badge">Material principal</span>
+      </div>
+
+      <!-- DESCRIPCIÓN -->
+      <p class="material-descripcion">{{ material.descripcion }}</p>
+
+      <!-- DATOS -->
+      <div class="material-datos">
+        <div class="dato-item">
+          <span class="dato-label">Precio unitario actual</span>
+          <span class="dato-value precio">${{ material.precioUnitario | number }}</span>
+        </div>
+        <div class="dato-item">
+          <span class="dato-label">Última actualización</span>
+          <span class="dato-value muted">{{ material.ultimaActualizacion }}</span>
+        </div>
+      </div>
+
+      <!-- ACCIÓN -->
+      <div class="card-footer">
+        <button class="btn-editar" (click)="openEditModal()">
+          ✏️ Editar precio
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR -->
+  <div class="modal-overlay" *ngIf="showEditModal">
+    <div class="modal-backdrop" (click)="closeEditModal()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Editar precio — Bloqueplas</h2>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="modal-material-name">
+          <span class="modal-icon">🧱</span>
+          <div>
+            <p class="modal-nombre">{{ material.nombre }}</p>
+            <p class="modal-unidad">Por {{ material.unidad }}</p>
+          </div>
+        </div>
+
+        <!-- PRECIO ACTUAL -->
+        <div class="precio-actual">
+          <span class="precio-actual-label">Precio actual</span>
+          <span class="precio-actual-value">${{ material.precioUnitario | number }}</span>
+        </div>
+
+        <!-- NUEVO PRECIO -->
+        <div class="form-group">
+          <label class="form-label">Nuevo precio unitario (COP)</label>
+          <div class="input-prefix-wrapper" [class.error]="precioError">
+            <span class="input-prefix">$</span>
+            <input
+              class="form-input"
+              [class.input-error]="precioError"
+              type="number"
+              [(ngModel)]="newPrecio"
+              min="1"
+              max="9999999"
+              placeholder="0"
+            />
+          </div>
+          <span class="error-msg" *ngIf="precioError">{{ precioError }}</span>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="precio-preview">
+          <span class="preview-label">Nuevo precio:</span>
+          <span class="preview-value">${{ newPrecio | number }}</span>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeEditModal()">Cancelar</button>
+        <button class="btn-save-modal" (click)="validateAndSave()">Guardar cambios</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

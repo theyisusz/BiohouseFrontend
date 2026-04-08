@@ -1,0 +1,141 @@
+<div class="clientes-container animate-fade">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Clientes</h1>
+      <p class="page-subtitle">Listado detallado de clientes asignados</p>
+    </div>
+    <div class="header-stat">
+      <span class="header-stat-value">{{ clientes.length }}</span>
+      <span class="header-stat-label">clientes totales</span>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Buscar por nombre o correo..."
+        [(ngModel)]="searchTerm" class="search-input"/>
+    </div>
+    <div class="search-box select-box">
+      <span class="search-icon">🔽</span>
+      <select [(ngModel)]="selectedEstado" class="search-input">
+        <option value="">Todos los estados</option>
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-card">
+
+    <div class="empty-state" *ngIf="filteredClientes.length === 0">
+      <p class="empty-icon">👥</p>
+      <p class="empty-text">No se encontraron clientes con ese criterio.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="filteredClientes.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Proyectos</th>
+            <th>Fecha registro</th>
+            <th>Última sesión</th>
+            <th>Estado</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of filteredClientes">
+            <td>
+              <div class="client-info">
+                <div class="client-avatar">
+                  {{ getInitials(cliente.nombre, cliente.apellido) }}
+                </div>
+                <div>
+                  <p class="client-name">{{ cliente.nombre }} {{ cliente.apellido }}</p>
+                  <p class="client-email">{{ cliente.correo }}</p>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-text">{{ cliente.telefono }}</span></td>
+            <td>
+              <div class="proyectos-cell">
+                <span class="proyectos-count">{{ cliente.proyectos }}</span>
+                <span class="proyectos-label">proyectos</span>
+              </div>
+            </td>
+            <td><span class="cell-text">{{ cliente.fechaRegistro }}</span></td>
+            <td><span class="cell-text muted">{{ cliente.ultimaSesion }}</span></td>
+            <td>
+              <span class="badge" [ngClass]="getBadgeClass(cliente.estado)">
+                {{ cliente.estado }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action btn-detail"
+                      (click)="openDetail(cliente)" title="Ver detalle">
+                👁️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MODAL DETALLE -->
+  <div class="modal-overlay" *ngIf="showDetailModal">
+    <div class="modal-backdrop" (click)="closeDetail()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Detalle del cliente</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedCliente">
+        <div class="detail-avatar">
+          {{ getInitials(selectedCliente.nombre, selectedCliente.apellido) }}
+        </div>
+        <h3 class="detail-name">
+          {{ selectedCliente.nombre }} {{ selectedCliente.apellido }}
+        </h3>
+        <span class="badge" [ngClass]="getBadgeClass(selectedCliente.estado)">
+          {{ selectedCliente.estado }}
+        </span>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Correo</span>
+            <span class="detail-value">{{ selectedCliente.correo }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Teléfono</span>
+            <span class="detail-value">{{ selectedCliente.telefono }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Proyectos creados</span>
+            <span class="detail-value">{{ selectedCliente.proyectos }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Fecha de registro</span>
+            <span class="detail-value">{{ selectedCliente.fechaRegistro }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Última sesión</span>
+            <span class="detail-value">{{ selectedCliente.ultimaSesion }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-close-modal" (click)="closeDetail()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,31 @@
+.main-container {
+  display: flex;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  min-height: 100vh;      /* Asegura que el contenedor ocupe toda la pantalla */
+}
+
+#header {
+  flex-shrink: 0;         /* El header no se encogerá */
+}
+
+#details {
+  flex-grow: 1;           /* El área de contenido crecerá para llenar el espacio sobrante */
+}
+
+#footer {
+  flex-shrink: 0;         /* El footer siempre estará en la base */
+}
+
+.main-container {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+#details {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}

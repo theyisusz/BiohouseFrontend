@@ -1,0 +1,42 @@
+<div #modelado id="divModelado">
+
+  <div id="tools">
+    <app-actions-model></app-actions-model>
+
+    <div class="tools-bar">
+      <div class="block-counter">
+        <span class="block-label">Bloques</span>
+        <span class="block-value">{{ numBlocks }}</span>
+      </div>
+
+      <button class="btn-wall" type="button" (click)="construirMuros()">
+        Levantar pared
+      </button>
+
+      <div class="opacity-control">
+        <label class="opacity-label">Opacidad</label>
+        <input
+          type="range"
+          min="0.2"
+          max="1.0"
+          step="0.1"
+          value="1"
+          (input)="cambiarOpacidad($event)"
+        />
+      </div>
+    </div>
+  </div>
+
+  @if (selectedCube) {
+    @for (btn of activeButtons; track $index) {
+      @if (btn.visible) {
+        <div class="floatingButton"
+          [style.left.px]="btn.screenX"
+          [style.top.px]="btn.screenY">
+          <button (click)="crearBloqueDesdeSeleccion(btn.offsetX, btn.offsetZ, btn.rotateY)">+</button>
+        </div>
+      }
+    }
+  }
+
+</div>

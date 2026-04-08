@@ -1,0 +1,28 @@
+.btn-hero-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2) !important;
+}
+
+.btn-hero-ghost:hover {
+  background: rgba(255,255,255,0.22) !important;
+}
+
+.step-card-green:hover {
+  transform: translateY(-3px);
+}
+
+.benefit-item-light {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #d1fae5;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.feature-card-light:hover {
+  border-color: #34a853 !important;
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}

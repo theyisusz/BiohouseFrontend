@@ -1,0 +1,23 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-fadeIn { animation: fadeIn 0.25s ease-out; }
+
+.menu-item {
+  @apply w-full text-left px-4 py-3 text-sm text-gray-700
+         transition-all duration-300 flex items-center gap-3
+         relative overflow-hidden;
+}
+
+.menu-item::before {
+  content: '';
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+  background: linear-gradient(to right, #34a853, #b4d435);
+  z-index: 0;
+}
+
+.menu-item:hover::before { @apply opacity-100; }
+.menu-item span { @apply relative z-10; }
+.menu-item:hover { @apply text-white; }

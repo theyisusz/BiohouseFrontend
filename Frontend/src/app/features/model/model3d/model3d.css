@@ -1,0 +1,171 @@
+#divModelado {
+  position: relative;
+  width: 100%;
+  height: 700px;
+  overflow: hidden;
+  display: block; /* flex causaba problemas con el canvas absoluto */
+}
+
+#divModelado canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+app-actions-model {
+  position: relative;
+  z-index: 10;
+}
+
+.info {
+  margin-top: 80px;
+  margin-left: 20px;
+  font-size: 30px;
+}
+
+#tools {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  color: white;
+}
+
+.tools-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 80px;
+  margin-left: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+  width: fit-content;
+  min-width: 200px;
+}
+
+.block-counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: rgba(76, 175, 80, 0.2);
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.block-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #a8d5a0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.block-value {
+  font-weight: bold;
+  font-size: 18px;
+  color: #4caf50;
+  min-width: 30px;
+  text-align: right;
+}
+
+.btn-wall {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transition-property: background-color, transform, box-shadow;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0px 2px 6px rgba(76, 175, 80, 0.3);
+}
+
+.btn-wall:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 12px rgba(76, 175, 80, 0.5);
+}
+
+.btn-wall:active {
+  transform: translateY(0);
+  box-shadow: 0px 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+.opacity-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background-color: rgba(100, 150, 255, 0.2);
+  border-radius: 6px;
+  border-left: 3px solid #6496ff;
+}
+
+.opacity-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #a8c5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.opacity-control input[type='range'] {
+  cursor: pointer;
+  accent-color: #6496ff;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.floatingButton {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.floatingButton button {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: limegreen;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.floatingButton button:hover {
+  background: #32cd32;
+  transform: scale(1.15);
+}
+
+.slider-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #333;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  margin-left: 10px;
+  border: 2px solid #555;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.slider-container input[type='range'] {
+  cursor: pointer;
+  accent-color: #4caf50;
+}
