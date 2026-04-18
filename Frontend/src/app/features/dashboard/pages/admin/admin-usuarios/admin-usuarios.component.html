@@ -23,6 +23,13 @@
         class="search-input"
       />
     </div>
+    <div class="search-box select-box" style="margin-right: 15px;">
+      <span class="search-icon">🌎</span>
+      <select [(ngModel)]="selectedRegion" class="search-input">
+        <option value="">Todas las regiones</option>
+        <option *ngFor="let reg of regions" [value]="reg">{{ reg }}</option>
+      </select>
+    </div>
     <div class="search-box select-box">
       <span class="search-icon">🔽</span>
       <select [(ngModel)]="selectedEstado" class="search-input">
@@ -49,7 +56,9 @@
           <tr>
             <th>Cliente</th>
             <th>Teléfono</th>
+            <th>Región</th>
             <th>Proyectos</th>
+            <th>Asesor</th>
             <th>Fecha registro</th>
             <th>Última sesión</th>
             <th>Estado</th>
@@ -77,12 +86,23 @@
               <span class="cell-text">{{ cliente.telefono }}</span>
             </td>
 
+            <!-- REGIÓN -->
+            <td>
+              <span class="cell-text" *ngIf="cliente.departamento">{{ cliente.municipio }}, {{ cliente.departamento }}</span>
+              <span class="cell-text text-gray-400" *ngIf="!cliente.departamento">Sin región</span>
+            </td>
+
             <!-- PROYECTOS -->
             <td>
               <div class="proyectos-cell">
                 <span class="proyectos-count">{{ cliente.proyectos }}</span>
                 <span class="proyectos-label">proyectos</span>
               </div>
+            </td>
+
+            <!-- ASESOR -->
+            <td>
+              <span class="cell-text">{{ getAsesorNombre(cliente.asesorId) }}</span>
             </td>
 
             <!-- FECHA REGISTRO -->
@@ -109,6 +129,11 @@
                         (click)="openDetail(cliente)"
                         title="Ver detalle">
                   👁️
+                </button>
+                <button class="btn-action btn-asesor"
+                        (click)="openAsesorModal(cliente)"
+                        title="Asignar asesor">
+                  👤
                 </button>
                 <button class="btn-action btn-estado"
                         (click)="openEstadoModal(cliente)"
@@ -167,6 +192,10 @@
             <span class="detail-label">Última sesión</span>
             <span class="detail-value">{{ selectedCliente.ultimaSesion }}</span>
           </div>
+          <div class="detail-item">
+            <span class="detail-label">Asesor asignado</span>
+            <span class="detail-value">{{ getAsesorNombre(selectedCliente.asesorId) }}</span>
+          </div>
         </div>
 
       </div>
@@ -215,6 +244,40 @@
       <div class="modal-footer">
         <button class="btn-cancel-modal" (click)="closeEstadoModal()">Cancelar</button>
         <button class="btn-save-modal" (click)="saveEstado()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL ASIGNAR ASESOR -->
+  <div class="modal-overlay" *ngIf="showAsesorModal">
+    <div class="modal-backdrop" (click)="closeAsesorModal()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Asignar Asesor</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="clienteToAssignAsesor">
+        <p class="estado-subtitle">
+          👤 <strong>{{ clienteToAssignAsesor.nombre }} {{ clienteToAssignAsesor.apellido }}</strong>
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Selecciona un asesor:</label>
+          <select [(ngModel)]="selectedAsesorId" class="form-select" (change)="onAsesorChange()">
+            <option [ngValue]="null">— Sin asesor asignado</option>
+            <option *ngFor="let asesor of asesores" [ngValue]="asesor.id">
+              {{ asesor.nombre }} {{ asesor.apellido }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeAsesorModal()">Cancelar</button>
+        <button class="btn-save-modal" (click)="saveAsesor()">Guardar Cambios</button>
       </div>
 
     </div>

@@ -14,7 +14,7 @@
   <!-- Contenido -->
   <div class="relative z-10 w-full max-w-2xl">
     <!-- Botón volver -->
-    <button (click)="goToLogin()" class="btn-back mb-4 text-white flex items-center gap-2 text-sm font-semibold" style="
+    <button (click)="goBack()" class="btn-back mb-4 text-white flex items-center gap-2 text-sm font-semibold" style="
         background: rgba(255, 255, 255, 0.15);
         border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 20px;
@@ -22,7 +22,7 @@
         backdrop-filter: blur(4px);
         cursor: pointer;
       ">
-      ← Volver al inicio de sesión
+      ← Volver a asesores
     </button>
 
     <!-- Card -->
@@ -67,7 +67,7 @@
           margin: 0 0 5px;
           letter-spacing: -0.5px;
         ">
-        Crear Cuenta
+        Crear Nuevo Asesor
       </h1>
       <p class="text-center" style="
           font-size: 12.5px;
@@ -77,7 +77,7 @@
           text-transform: uppercase;
           font-weight: 500;
         ">
-        Complete sus datos para comenzar a diseñar su casa
+        Agregue un nuevo asesor comercial al sistema
       </p>
 
       <!-- Divisor decorativo -->
@@ -105,7 +105,7 @@
       </div>
 
       <!-- Formulario -->
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="createAsesorForm" (ngSubmit)="onSubmit()">
         <!-- Nombre y Apellido -->
         <div class="grid grid-cols-1 gap-4 mb-4" style="grid-template-columns: 1fr 1fr">
           <!-- Nombre -->
@@ -411,7 +411,7 @@
             </label>
             <div class="flex items-center input-field" [class.input-error]="
                 (confirmPassword?.touched &&
-                  registerForm.errors?.['passwordMismatch']) ||
+                  createAsesorForm.errors?.['passwordMismatch']) ||
                 (confirmPassword?.invalid && confirmPassword?.touched)
               " style="
                 border: 1.5px solid #c8e6c8;
@@ -447,7 +447,7 @@
             </div>
             @if (
             confirmPassword?.touched &&
-            registerForm.errors?.["passwordMismatch"]
+            createAsesorForm.errors?.["passwordMismatch"]
             ) {
             <div class="mt-1">
               <p class="error-msg">✕ Las contraseñas no coinciden</p>
@@ -455,6 +455,7 @@
             }
           </div>
         </div>
+
         <!-- Términos -->
         <div class="mb-4 flex items-start gap-3" style="
             background: #f8fdf8;
@@ -489,137 +490,44 @@
         </div>
         }
 
-        <!-- Beneficios -->
-        <div class="mb-5" style="
-            background: linear-gradient(
-              to right,
-              rgba(52, 168, 83, 0.08),
-              rgba(180, 212, 53, 0.08)
-            );
-            border-radius: 14px;
-            padding: 16px;
-            border: 1.5px solid rgba(52, 168, 83, 0.2);
-          ">
-          <h3 style="
-              font-size: 13px;
-              font-weight: 700;
-              color: #2d7a2d;
-              margin: 0 0 10px;
-              display: flex;
-              align-items: center;
-              gap: 8px;
-            ">
-            <svg width="16" height="16" fill="none" stroke="#34a853" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Beneficios de tu cuenta
-          </h3>
-          <ul style="
-              list-style: none;
-              margin: 0;
-              padding: 0;
-              display: flex;
-              flex-direction: column;
-              gap: 7px;
-            ">
-            <li style="
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 13px;
-                color: #555;
-              ">
-              <div style="
-                  width: 6px;
-                  height: 6px;
-                  border-radius: 50%;
-                  background: #34a853;
-                  flex-shrink: 0;
-                "></div>
-              Diseña tu casa en 3D de forma interactiva
-            </li>
-            <li style="
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 13px;
-                color: #555;
-              ">
-              <div style="
-                  width: 6px;
-                  height: 6px;
-                  border-radius: 50%;
-                  background: #b4d435;
-                  flex-shrink: 0;
-                "></div>
-              Obtén cotizaciones en tiempo real
-            </li>
-            <li style="
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 13px;
-                color: #555;
-              ">
-              <div style="
-                  width: 6px;
-                  height: 6px;
-                  border-radius: 50%;
-                  background: #34a853;
-                  flex-shrink: 0;
-                "></div>
-              Guarda tus proyectos
-            </li>
-          </ul>
+        <!-- Botones -->
+        <div class="grid grid-cols-1 gap-3 mt-6" style="grid-template-columns: 1fr 1fr">
+          <button type="button" (click)="goBack()" class="btn-cancel" style="
+              width: 100%;
+              padding: 12px 24px;
+              border: 1.5px solid #e2e8f0;
+              border-radius: 12px;
+              background: white;
+              font-size: 14px;
+              font-weight: 600;
+              color: #64748b;
+              cursor: pointer;
+              transition: all 0.2s;
+            "
+            onmouseover="this.style.borderColor='#cbd5e1'; this.style.backgroundColor='#f8fafc'"
+            onmouseout="this.style.borderColor='#e2e8f0'; this.style.backgroundColor='white'">
+            Cancelar
+          </button>
+          <button type="submit" [disabled]="createAsesorForm.invalid" class="btn-submit" style="
+              width: 100%;
+              padding: 12px 24px;
+              border: none;
+              border-radius: 12px;
+              background: linear-gradient(135deg, #34a853 0%, #b4d435 100%);
+              font-size: 14px;
+              font-weight: 600;
+              color: white;
+              cursor: pointer;
+              transition: all 0.2s;
+            "
+            onmouseover="this.style.opacity='0.95'; this.style.transform='translateY(-1px)'"
+            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'"
+            [style.opacity]="createAsesorForm.invalid ? 0.6 : 1"
+            [style.cursor]="createAsesorForm.invalid ? 'not-allowed' : 'pointer'">
+            Crear Asesor
+          </button>
         </div>
-
-        <!-- Botón -->
-        <button type="submit" class="w-full text-white btn-login" style="
-            height: 52px;
-            border-radius: 14px;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            background: linear-gradient(to right, #34a853, #b4d435);
-            box-shadow:
-              0 6px 24px rgba(52, 168, 83, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          ">
-          Crear Cuenta
-        </button>
       </form>
-
-      <!-- Link login -->
-      <div class="flex items-center" style="margin: 1.5rem 0 1rem; gap: 10px">
-        <div class="flex-1" style="height: 1px; background: #f0f0f0"></div>
-        <div style="
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: #e0e0e0;
-          "></div>
-        <div class="flex-1" style="height: 1px; background: #f0f0f0"></div>
-      </div>
-
-      <p class="text-center" style="font-size: 13.5px; color: #aaa; margin: 0">
-        ¿Ya tienes una cuenta?
-        <a (click)="goToLogin()" style="
-            color: #34a853;
-            font-weight: 800;
-            text-decoration: none;
-            margin-left: 4px;
-            cursor: pointer;
-          ">
-          Inicia sesión aquí
-        </a>
-      </p>
-
-      <p class="text-center" style="font-size: 12px; color: #ccc; margin-top: 1.25rem">
-        La forma inteligente de construir — BIO HOUSE © 2026
-      </p>
     </div>
   </div>
 </div>
