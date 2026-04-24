@@ -24,6 +24,7 @@ import { AdminUsuariosComponent } from './features/dashboard/pages/admin/admin-u
 import { AdminCotizacionesComponent } from './features/dashboard/pages/admin/admin-cotizaciones/admin-cotizaciones.component';
 import { AdminPreciosComponent } from './features/dashboard/pages/admin/admin-precios/admin-precios.component';
 import { AdminAsesoresComponent } from './features/dashboard/pages/admin/admin-asesores/admin-asesores.component';
+import { CreateAsesorComponent } from './features/dashboard/pages/admin/create-asesor/create-asesor.component';
 import { AsesorCotizacionesComponent } from './features/dashboard/pages/asesor/asesor-cotizaciones/asesor-cotizaciones.component';
 import { AsesorClientesComponent } from './features/dashboard/pages/asesor/asesor-clientes/asesor-clientes.component';
 import { AsesorDashboardComponent } from './features/dashboard/pages/asesor/asesor-dashboard/asesor-dashboard.component';
@@ -69,6 +70,7 @@ export const routes: Routes = [
     // futuras rutas:
        { path: 'clientes', component: AdminUsuariosComponent },
        { path: 'asesores',  component: AdminAsesoresComponent  },
+       { path: 'asesores/crear', component: CreateAsesorComponent },
        { path: 'cotizaciones', component: AdminCotizacionesComponent },
        { path: 'precios', component: AdminPreciosComponent },
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

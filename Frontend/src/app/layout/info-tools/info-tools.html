@@ -64,9 +64,63 @@
       <h3 class="cta-title">¿Listo para comenzar?</h3>
       <p class="cta-desc">Empieza a diseñar tu estructura en 3D ahora mismo</p>
     </div>
-    <button class="btn-create" (click)="goToModel()">
+    <button class="btn-create" (click)="openModal()">
       🏠 Empieza a crear tu modelo
     </button>
   </div>
 
+</div>
+
+<!-- Modal Form -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-content animate-fade">
+    <button class="modal-close" (click)="closeModal()">×</button>
+
+    <div *ngIf="!showConfirmation">
+      <h3 class="modal-title">Detalles de tu proyecto</h3>
+      <p class="modal-desc">Ingresa la información inicial para tu diseño.</p>
+
+      <div class="form-group">
+        <label>Nombre del proyecto</label>
+        <input type="text" [(ngModel)]="projectName" placeholder="Ej. Casa de campo">
+      </div>
+
+      <div class="form-group">
+        <label>Departamento</label>
+        <select [(ngModel)]="selectedDepartment" (change)="onDepartmentChange()">
+          <option value="" disabled selected>Selecciona un departamento</option>
+          <option *ngFor="let dep of departments" [value]="dep">{{ dep }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Ciudad o Municipio</label>
+        <select [(ngModel)]="selectedCity" [disabled]="!selectedDepartment">
+          <option value="" disabled selected>Selecciona una ciudad</option>
+          <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="guardar()">Guardar</button>
+      </div>
+    </div>
+
+    <div *ngIf="showConfirmation" class="confirmation-view">
+      <h3 class="modal-title">¿Estás seguro?</h3>
+      <p class="modal-desc">Verifica que la información ingresada sea correcta.</p>
+      
+      <div class="info-summary">
+        <p><strong>Proyecto:</strong> {{ projectName }}</p>
+        <p><strong>Ubicación:</strong> {{ selectedCity }}, {{ selectedDepartment }}</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelarConfirmacion()">No, regresar</button>
+        <button class="btn-primary" (click)="confirmar()">Sí, continuar</button>
+      </div>
+    </div>
+
+  </div>
 </div>
