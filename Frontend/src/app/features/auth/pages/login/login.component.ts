@@ -1,52 +1,81 @@
-import { Component } from '@angular/core';
-
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
+import { filter, take } from 'rxjs';
+
 @Component({
-    selector: 'app-login',
-    imports: [ReactiveFormsModule],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  template: '<p>Redirigiendo...</p>'
 })
-export class LoginComponent {
-  
+export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
-  showPassword = false;
+  constructor(
+    private auth0: Auth0Service,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.loginForm = this.fb.group({
-      email: [
-        '',
-        [
-          Validators.required,
-          Validators.email
-        ]
-      ],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(8)
-        ]
-      ]
-    });
+  ngOnInit(): void {
+
+    this.auth0.isAuthenticated$
+      .pipe(take(1))
+      .subscribe(isAuth => {
+
+        console.log("🔥 isAuthenticated:", isAuth);
+
+      if (!isAuth) {
+        this.auth0.loginWithRedirect({
+          authorizationParams: {
+            prompt: 'login' // 🔥 FORZAR LOGIN SIEMPRE
+          }
+        });
+        return;
+      }
+
+        // 🔥 1. Intentar con usuario ya cargado
+        const user = this.authService.getUser();
+        console.log("🔥 getUser():", user);
+
+        if (user) {
+          console.log("🔥 Usuario ya estaba listo");
+          this.redirectByRole(user);
+          return;
+        }
+
+        // 🔥 2. Esperar usuario si aún no está
+        this.authService.user$
+          .pipe(
+            filter(u => !!u),
+            take(1)
+          )
+          .subscribe(u => {
+            console.log("🔥 Usuario recibido después:", u);
+            this.redirectByRole(u);
+          });
+
+      });
+
   }
 
-  get email() { return this.loginForm.get('email'); }
-  get password() { return this.loginForm.get('password'); }
+  redirectByRole(user: any) {
 
-  togglePassword() {
-    this.showPassword = !this.showPassword;
-  }
+    console.log("🔥 USER COMPLETO:", user);
+    console.log("🔥 ROL:", user?.role);
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
+    const role = user?.role;
+
+    if (role === 'ADMIN') {
+      this.router.navigate(['/admin/dashboard']);
+    } else if (role === 'ASESOR') {
+      this.router.navigate(['/asesor/dashboard']);
+    } else if (role === 'CLIENTE') {
+      this.router.navigate(['/client/dashboard']);
+    } else {
+      console.warn("⚠️ Rol desconocido, redirigiendo a home");
+      this.router.navigate(['/']);
     }
-    console.log('Login correcto:', this.loginForm.value);
-    // aquí irá la llamada al microservicio de auth
+
   }
-  goToHome() { this.router.navigate(['/home']); }
+
 }

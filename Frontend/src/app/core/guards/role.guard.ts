@@ -4,21 +4,25 @@ import { AuthService } from '../services/auth.service';
 
 export const adminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
-  const router      = inject(Router);
+  const router = inject(Router);
 
-  if (authService.isAdmin()) {
+  const user = authService.getUser();
+
+  if (user?.role === 'ADMIN') {
     return true;
   }
 
-  router.navigate(['/client/dashboard']);
+  router.navigate(['/cliente/dashboard']);
   return false;
 };
 
 export const clienteGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
-  const router      = inject(Router);
+  const router = inject(Router);
 
-  if (authService.isCliente()) {
+  const user = authService.getUser();
+
+  if (user?.role === 'CLIENTE') {
     return true;
   }
 

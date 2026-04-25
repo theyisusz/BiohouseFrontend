@@ -1,59 +1,123 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { LoginRequest, RegisterRequest, AuthResponse } from '../models/auth.model';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import { BehaviorSubject, filter, switchMap, take, tap } from 'rxjs';
+import { Usuario } from '../models/usuario.model';
+import { Router } from '@angular/router';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'http://localhost:8081/api/v1/usuarios';
 
-  constructor(private http: HttpClient) {}
+  // 🔥 Estado global reactivo
+  private userSubject = new BehaviorSubject<Usuario | null>(null);
+  user$ = this.userSubject.asObservable();
 
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
-        localStorage.setItem('usuario', JSON.stringify(response.usuario));
+  constructor(
+    private http: HttpClient,
+    private auth0: Auth0Service,
+    private router: Router
+  ) {
+    this.initAuthFlow(); // 🔥 AUTO SINCRONIZACIÓN
+  }
+
+  // --------------------------------------------------
+  // 🔥 FLUJO AUTOMÁTICO (ESTO ES LA CLAVE)
+  // --------------------------------------------------
+private initAuthFlow() {
+  this.auth0.isAuthenticated$
+    .pipe(
+      filter(isAuth => isAuth === true),
+      take(1),
+      switchMap(() => this.sincronizarUsuario())
+    )
+    .subscribe({
+      next: (user) => {
+        this.userSubject.next(user);
+
+        console.log('✅ Usuario sincronizado automáticamente:', user);
+
+        // 🔥 REDIRECCIÓN AQUÍ
+        this.redirectByRole(user);
+
+      },
+      error: (err) => {
+        console.error('❌ Error en sincronización:', err);
+      }
+    });
+}
+
+  // --------------------------------------------------
+  // 🔥 SINCRONIZAR CON BACKEND
+  // --------------------------------------------------
+  sincronizarUsuario() {
+    return this.auth0.user$.pipe(
+      filter(user => !!user), // asegurarse que exista
+      take(1),
+      switchMap(user => {
+
+        const dto = {
+          email: user?.email,
+          nombre: user?.name,
+          apellido: user?.family_name,
+          imagenUrl: user?.picture
+        };
+
+        return this.http.post<Usuario>(`${this.apiUrl}/sincronizar`, dto);
+      }),
+      tap(user => {
+        this.userSubject.next(user); // 🔥 actualizar estado
       })
     );
   }
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/registrar`, data);
+  // --------------------------------------------------
+  // 🔐 GET USER ACTUAL (sincrónico)
+  // --------------------------------------------------
+  getUser(): Usuario | null {
+    return this.userSubject.value;
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('usuario');
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
-  getUsuario(): any {
-    const u = localStorage.getItem('usuario');
-    return u ? JSON.parse(u) : null;
-  }
-
-  getRol(): string | null {
-    const u = this.getUsuario();
-    return u ? u.rol : null;
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getToken();
-  }
-
+  // --------------------------------------------------
+  // 🔐 HELPERS DE ROLES (para guards)
+  // --------------------------------------------------
   isAdmin(): boolean {
-    return this.getRol() === 'ADMINISTRADOR';
+    return this.userSubject.value?.role === 'ADMIN';
+  }
+
+  isAsesor(): boolean {
+    return this.userSubject.value?.role === 'ASESOR';
   }
 
   isCliente(): boolean {
-    return this.getRol() === 'CLIENTE';
+    return this.userSubject.value?.role === 'CLIENTE';
   }
+
+  // --------------------------------------------------
+  // 🚪 LOGOUT
+  // --------------------------------------------------
+logout() {
+  this.userSubject.next(null);
+  sessionStorage.clear();
+  localStorage.clear();
+
+  this.auth0.logout({
+    logoutParams: {
+      returnTo: window.location.origin
+    }
+  });
+}
+  private redirectByRole(user: any) {
+  if (user.role === 'ADMIN') {
+    this.router.navigate(['/admin/dashboard']);
+  } else if (user.role === 'ASESOR') {
+    this.router.navigate(['/asesor/dashboard']);
+  } else {
+    this.router.navigate(['/client/dashboard']);
+  }
+}
+
 }
