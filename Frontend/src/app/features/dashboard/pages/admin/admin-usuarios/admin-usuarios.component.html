@@ -1,0 +1,286 @@
+<div class="usuarios-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestión de Usuarios</h1>
+      <p class="page-subtitle">Seguimiento y administración de clientes registrados</p>
+    </div>
+    <div class="header-stat">
+      <span class="header-stat-value">{{ clientes.length }}</span>
+      <span class="header-stat-label">clientes totales</span>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, apellido o correo..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+    <div class="search-box select-box" style="margin-right: 15px;">
+      <span class="search-icon">🌎</span>
+      <select [(ngModel)]="selectedRegion" class="search-input">
+        <option value="">Todas las regiones</option>
+        <option *ngFor="let reg of regions" [value]="reg">{{ reg }}</option>
+      </select>
+    </div>
+    <div class="search-box select-box">
+      <span class="search-icon">🔽</span>
+      <select [(ngModel)]="selectedEstado" class="search-input">
+        <option value="">Todos los estados</option>
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+        <option value="Bloqueado">Bloqueado</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-card">
+
+    <!-- SIN RESULTADOS -->
+    <div class="empty-state" *ngIf="filteredClientes.length === 0">
+      <p class="empty-icon">🔍</p>
+      <p class="empty-text">No se encontraron clientes con ese criterio.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="filteredClientes.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Región</th>
+            <th>Proyectos</th>
+            <th>Asesor</th>
+            <th>Fecha registro</th>
+            <th>Última sesión</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of filteredClientes">
+
+            <!-- CLIENTE -->
+            <td>
+              <div class="client-info">
+                <div class="client-avatar">
+                  {{ getInitials(cliente.nombre, cliente.apellido) }}
+                </div>
+                <div>
+                  <p class="client-name">{{ cliente.nombre }} {{ cliente.apellido }}</p>
+                  <p class="client-email">{{ cliente.correo }}</p>
+                </div>
+              </div>
+            </td>
+
+            <!-- TELÉFONO -->
+            <td>
+              <span class="cell-text">{{ cliente.telefono }}</span>
+            </td>
+
+            <!-- REGIÓN -->
+            <td>
+              <span class="cell-text" *ngIf="cliente.departamento">{{ cliente.municipio }}, {{ cliente.departamento }}</span>
+              <span class="cell-text text-gray-400" *ngIf="!cliente.departamento">Sin región</span>
+            </td>
+
+            <!-- PROYECTOS -->
+            <td>
+              <div class="proyectos-cell">
+                <span class="proyectos-count">{{ cliente.proyectos }}</span>
+                <span class="proyectos-label">proyectos</span>
+              </div>
+            </td>
+
+            <!-- ASESOR -->
+            <td>
+              <span class="cell-text">{{ getAsesorNombre(cliente.asesorId) }}</span>
+            </td>
+
+            <!-- FECHA REGISTRO -->
+            <td>
+              <span class="cell-text">{{ cliente.fechaRegistro }}</span>
+            </td>
+
+            <!-- ÚLTIMA SESIÓN -->
+            <td>
+              <span class="cell-text muted">{{ cliente.ultimaSesion }}</span>
+            </td>
+
+            <!-- ESTADO -->
+            <td>
+              <span class="badge" [ngClass]="getEstadoBadge(cliente.estado)">
+                {{ cliente.estado }}
+              </span>
+            </td>
+
+            <!-- ACCIONES -->
+            <td>
+              <div class="actions">
+                <button class="btn-action btn-detail"
+                        (click)="openDetail(cliente)"
+                        title="Ver detalle">
+                  👁️
+                </button>
+                <button class="btn-action btn-asesor"
+                        (click)="openAsesorModal(cliente)"
+                        title="Asignar asesor">
+                  👤
+                </button>
+                <button class="btn-action btn-estado"
+                        (click)="openEstadoModal(cliente)"
+                        title="Cambiar estado">
+                  ✏️
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MODAL DETALLE -->
+  <div class="modal-overlay" *ngIf="showDetailModal">
+    <div class="modal-backdrop" (click)="closeDetail()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Detalle del cliente</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedCliente">
+
+        <div class="detail-avatar">
+          {{ getInitials(selectedCliente.nombre, selectedCliente.apellido) }}
+        </div>
+        <h3 class="detail-name">
+          {{ selectedCliente.nombre }} {{ selectedCliente.apellido }}
+        </h3>
+        <span class="badge" [ngClass]="getEstadoBadge(selectedCliente.estado)">
+          {{ selectedCliente.estado }}
+        </span>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Correo</span>
+            <span class="detail-value">{{ selectedCliente.correo }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Teléfono</span>
+            <span class="detail-value">{{ selectedCliente.telefono }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Proyectos creados</span>
+            <span class="detail-value">{{ selectedCliente.proyectos }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Fecha de registro</span>
+            <span class="detail-value">{{ selectedCliente.fechaRegistro }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Última sesión</span>
+            <span class="detail-value">{{ selectedCliente.ultimaSesion }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Asesor asignado</span>
+            <span class="detail-value">{{ getAsesorNombre(selectedCliente.asesorId) }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-close-modal" (click)="closeDetail()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL CAMBIAR ESTADO -->
+  <div class="modal-overlay" *ngIf="showEstadoModal">
+    <div class="modal-backdrop" (click)="closeEstadoModal()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Cambiar estado</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="clienteToEdit">
+        <p class="estado-subtitle">
+          Cliente: <strong>{{ clienteToEdit.nombre }} {{ clienteToEdit.apellido }}</strong>
+        </p>
+
+        <div class="estado-options">
+          <label class="estado-option" [class.selected]="newEstado === 'Activo'">
+            <input type="radio" [(ngModel)]="newEstado" value="Activo" />
+            <span class="estado-dot dot-activo"></span>
+            Activo
+          </label>
+          <label class="estado-option" [class.selected]="newEstado === 'Inactivo'">
+            <input type="radio" [(ngModel)]="newEstado" value="Inactivo" />
+            <span class="estado-dot dot-inactivo"></span>
+            Inactivo
+          </label>
+          <label class="estado-option" [class.selected]="newEstado === 'Bloqueado'">
+            <input type="radio" [(ngModel)]="newEstado" value="Bloqueado" />
+            <span class="estado-dot dot-bloqueado"></span>
+            Bloqueado
+          </label>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeEstadoModal()">Cancelar</button>
+        <button class="btn-save-modal" (click)="saveEstado()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL ASIGNAR ASESOR -->
+  <div class="modal-overlay" *ngIf="showAsesorModal">
+    <div class="modal-backdrop" (click)="closeAsesorModal()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Asignar Asesor</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="clienteToAssignAsesor">
+        <p class="estado-subtitle">
+          👤 <strong>{{ clienteToAssignAsesor.nombre }} {{ clienteToAssignAsesor.apellido }}</strong>
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Selecciona un asesor:</label>
+          <select [(ngModel)]="selectedAsesorId" class="form-select" (change)="onAsesorChange()">
+            <option [ngValue]="null">— Sin asesor asignado</option>
+            <option *ngFor="let asesor of asesores" [ngValue]="asesor.id">
+              {{ asesor.nombre }} {{ asesor.apellido }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeAsesorModal()">Cancelar</button>
+        <button class="btn-save-modal" (click)="saveAsesor()">Guardar Cambios</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

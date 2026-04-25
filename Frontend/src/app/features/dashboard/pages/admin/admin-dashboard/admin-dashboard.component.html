@@ -1,0 +1,130 @@
+<div class="dashboard-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="dashboard-header">
+    <div>
+      <h1 class="dashboard-title">Dashboard</h1>
+      <p class="dashboard-subtitle">Resumen general del sistema BioHouse</p>
+    </div>
+    <div class="header-date">
+      📅 {{ today | date:'dd/MM/yyyy' }}
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let stat of stats" [ngClass]="stat.color">
+      <div class="stat-icon">{{ stat.icon }}</div>
+      <div class="stat-info">
+        <p class="stat-label">{{ stat.label }}</p>
+        <p class="stat-value">{{ stat.value }}</p>
+        <p class="stat-sub">{{ stat.sub }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- CLIENTES RECIENTES -->
+    <div class="table-card">
+
+      <div class="table-card-header">
+        <div>
+          <h3 class="table-card-title">Clientes recientes</h3>
+          <p class="table-card-subtitle">Últimos usuarios activos en la plataforma</p>
+        </div>
+        <button class="btn-ver-todos" routerLink="/admin/usuarios">
+          Ver todos →
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Proyectos</th>
+              <th>Última sesión</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let client of recentClients">
+              <td>
+                <div class="client-info">
+                  <div class="client-avatar">
+                    {{ client.nombre[0] }}
+                  </div>
+                  <div>
+                    <p class="client-name">{{ client.nombre }}</p>
+                    <p class="client-email">{{ client.correo }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="project-count">{{ client.proyectos }}</span>
+              </td>
+              <td>
+                <span class="last-session">{{ client.ultimaSesion }}</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getEstadoBadge(client.estado)">
+                  {{ client.estado }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- COTIZACIONES RECIENTES -->
+    <div class="table-card">
+
+      <div class="table-card-header">
+        <div>
+          <h3 class="table-card-title">Cotizaciones recientes</h3>
+          <p class="table-card-subtitle">Últimas cotizaciones generadas</p>
+        </div>
+        <button class="btn-ver-todos" routerLink="/admin/cotizaciones">
+          Ver todas →
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Proyecto</th>
+              <th>Valor</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let q of recentQuotations">
+              <td>
+                <span class="client-name">{{ q.cliente }}</span>
+              </td>
+              <td>
+                <span class="project-name">{{ q.proyecto }}</span>
+              </td>
+              <td>
+                <span class="quote-value">{{ q.valor }}</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getEstadoBadge(q.estado)">
+                  {{ q.estado }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

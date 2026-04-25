@@ -1,0 +1,346 @@
+<div class="asesores-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestión de Asesores</h1>
+      <p class="page-subtitle">Seguimiento y administración de asesores comerciales</p>
+    </div>
+    <div class="header-stat">
+      <span class="header-stat-value">{{ totalAsesores }}</span>
+      <span class="header-stat-label">asesores totales</span>
+    </div>
+    <button class="btn-new" (click)="createNewAsesor()">+ Nuevo Asesor</button>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, apellido o correo..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+    <div class="filter-region" style="margin-right: 15px;">
+      <select [(ngModel)]="selectedRegion" class="estado-select">
+        <option value="">🌎 Todas las regiones</option>
+        <option *ngFor="let reg of regions" [value]="reg">{{ reg }}</option>
+      </select>
+    </div>
+    <div class="filter-estado">
+      <select [(ngModel)]="filtroEstado" class="estado-select">
+        <option value="activos">✅ Activos</option>
+        <option value="inactivos">❌ Inactivos</option>
+        <option value="todos">📋 Todos</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-card">
+
+    <!-- SIN RESULTADOS -->
+    <div class="empty-state" *ngIf="filteredAsesores.length === 0">
+      <p class="empty-icon">🧑‍💼</p>
+      <p class="empty-text">No se encontraron asesores con ese criterio.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="filteredAsesores.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Asesor</th>
+            <th>Teléfono</th>
+            <th>Región</th>
+            <th>Clientes</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let asesor of filteredAsesores">
+
+            <!-- ASESOR -->
+            <td>
+              <div class="client-info">
+                <div class="client-avatar">
+                  {{ getInitials(asesor.nombre, asesor.apellido) }}
+                </div>
+                <div>
+                  <p class="client-name">{{ asesor.nombre }} {{ asesor.apellido }}</p>
+                  <p class="client-email">{{ asesor.correo }}</p>
+                </div>
+              </div>
+            </td>
+
+            <!-- TELÉFONO -->
+            <td>
+              <span class="cell-text">{{ asesor.telefono }}</span>
+            </td>
+
+            <!-- REGIÓN -->
+            <td>
+              <span class="cell-text" *ngIf="asesor.departamento">{{ asesor.municipio }}, {{ asesor.departamento }}</span>
+              <span class="cell-text text-gray-400" *ngIf="!asesor.departamento">Sin región</span>
+            </td>
+
+            <!-- CLIENTES -->
+            <td>
+              <div class="proyectos-cell">
+                <span class="proyectos-count">{{ asesor.clientes.length }}</span>
+                <span class="proyectos-label">cliente{{ asesor.clientes.length !== 1 ? 's' : '' }}</span>
+              </div>
+            </td>
+
+            <!-- ESTADO -->
+            <td>
+              <span class="badge" [ngClass]="asesor.estado === 'activo' ? 'badge-activo' : 'badge-inactivo'">
+                {{ asesor.estado === 'activo' ? '✅ Activo' : '❌ Inactivo' }}
+              </span>
+            </td>
+
+            <!-- ACCIONES -->
+            <td>
+              <div class="actions">
+                <button class="btn-action btn-detail"
+                        (click)="openDetail(asesor)"
+                        [disabled]="asesor.clientes.length === 0"
+                        title="Ver clientes asignados">
+                  👁️
+                </button>
+                <button class="btn-action btn-edit"
+                        (click)="editAsesor(asesor)"
+                        [disabled]="asesor.estado === 'inactivo'"
+                        [title]="asesor.estado === 'inactivo' ? 'Activa el asesor para poder editarlo' : 'Editar asesor'">
+                  ✏️
+                </button>
+                <button class="btn-action btn-delete"
+                        *ngIf="asesor.estado === 'activo'"
+                        (click)="deleteAsesor(asesor)"
+                        title="Eliminar asesor">
+                  🗑️
+                </button>
+                <button class="btn-action btn-activate"
+                        *ngIf="asesor.estado === 'inactivo'"
+                        (click)="activateAsesor(asesor)"
+                        title="Activar asesor">
+                  🔓
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MODAL CLIENTES -->
+  <div class="modal-overlay" *ngIf="showDetailModal">
+    <div class="modal-backdrop" (click)="closeDetail()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Clientes Asignados</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedAsesor">
+
+        <div class="detail-avatar">
+          {{ getInitials(selectedAsesor.nombre, selectedAsesor.apellido) }}
+        </div>
+        <h3 class="detail-name">
+          {{ selectedAsesor.nombre }} {{ selectedAsesor.apellido }}
+        </h3>
+
+        <div class="clientes-list" *ngIf="selectedAsesor.clientes.length > 0">
+          <div class="cliente-item" *ngFor="let cliente of selectedAsesor.clientes">
+            <div class="cliente-avatar">
+              {{ getInitials(cliente.nombre, cliente.apellido) }}
+            </div>
+            <div class="cliente-info">
+              <p class="cliente-name">{{ cliente.nombre }} {{ cliente.apellido }}</p>
+              <p class="cliente-email">{{ cliente.correo }}</p>
+              <p class="cliente-phone">{{ cliente.telefono }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-clientes" *ngIf="selectedAsesor.clientes.length === 0">
+          <p class="empty-icon">📭</p>
+          <p class="empty-text">Sin clientes asignados</p>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-close-modal" (click)="closeDetail()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR ASESOR -->
+  <div class="modal-overlay" *ngIf="showEditModal">
+    <div class="modal-backdrop" (click)="closeEdit()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Editar Asesor</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="asesorEnEdicion">
+
+        <form class="edit-form">
+
+          <div class="form-group">
+            <label class="form-label">Nombre <span class="char-count">{{ asesorEnEdicion.nombre?.length || 0 }}/30</span></label>
+            <input
+              type="text"
+              class="form-input"
+              [ngClass]="{ 'form-input-error': erroresValidacion['nombre'] }"
+              [(ngModel)]="asesorEnEdicion.nombre"
+              (input)="limpiarErrorCampo('nombre')"
+              name="nombre"
+              maxlength="30"
+              placeholder="Ingrese el nombre"
+            />
+            <span class="form-error" *ngIf="erroresValidacion['nombre']">
+              {{ erroresValidacion['nombre'] }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Apellido <span class="char-count">{{ asesorEnEdicion.apellido?.length || 0 }}/30</span></label>
+            <input
+              type="text"
+              class="form-input"
+              [ngClass]="{ 'form-input-error': erroresValidacion['apellido'] }"
+              [(ngModel)]="asesorEnEdicion.apellido"
+              (input)="limpiarErrorCampo('apellido')"
+              name="apellido"
+              maxlength="30"
+              placeholder="Ingrese el apellido"
+            />
+            <span class="form-error" *ngIf="erroresValidacion['apellido']">
+              {{ erroresValidacion['apellido'] }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Correo <span class="char-count">{{ asesorEnEdicion.correo?.length || 0 }}/60</span></label>
+            <input
+              type="email"
+              class="form-input"
+              [ngClass]="{ 'form-input-error': erroresValidacion['correo'] }"
+              [(ngModel)]="asesorEnEdicion.correo"
+              (input)="limpiarErrorCampo('correo')"
+              name="correo"
+              maxlength="60"
+              placeholder="Ingrese el correo"
+            />
+            <span class="form-error" *ngIf="erroresValidacion['correo']">
+              {{ erroresValidacion['correo'] }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Teléfono <span class="char-count">{{ asesorEnEdicion.telefono?.length || 0 }}/15</span></label>
+            <input
+              type="tel"
+              class="form-input"
+              [ngClass]="{ 'form-input-error': erroresValidacion['telefono'] }"
+              [(ngModel)]="asesorEnEdicion.telefono"
+              (input)="limpiarErrorCampo('telefono')"
+              name="telefono"
+              maxlength="15"
+              placeholder="Ingrese el teléfono"
+            />
+            <span class="form-error" *ngIf="erroresValidacion['telefono']">
+              {{ erroresValidacion['telefono'] }}
+            </span>
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeEdit()">Cancelar</button>
+        <button 
+          class="btn-save-modal" 
+          (click)="saveAsesor()"
+          [disabled]="verificarErrores() || verificarCamposVacios()"
+          [title]="verificarErrores() ? 'Completa todos los campos correctamente' : verificarCamposVacios() ? 'Todos los campos son requeridos' : 'Guardar cambios'"
+        >
+          Guardar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMACIÓN EDITAR -->
+  <div class="modal-overlay" *ngIf="showConfirmModal">
+    <div class="modal-backdrop" (click)="cancelConfirm()"></div>
+    <div class="modal-card modal-confirm animate-fade">
+
+      <div class="confirm-icon">❓</div>
+      <h2 class="confirm-title">¿Está seguro?</h2>
+      <p class="confirm-message">¿Guardar los cambios del asesor?</p>
+
+      <div class="confirm-buttons">
+        <button class="btn-confirm-no" (click)="cancelConfirm()">No</button>
+        <button class="btn-confirm-yes" (click)="confirmSave()">Sí</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL ELIMINAR ASESOR -->
+  <div class="modal-overlay" *ngIf="showDeleteModal">
+    <div class="modal-backdrop" (click)="closeDeleteModal()"></div>
+    <div class="modal-card modal-delete animate-fade">
+
+      <div class="delete-icon">⚠️</div>
+      <h2 class="delete-title">¿Desabilitar Asesor?</h2>
+      <p class="delete-message">
+        Para desabilitar a <strong>{{ asesorAEliminar?.nombre }} {{ asesorAEliminar?.apellido }}</strong>, podrás activarlo luego.
+      </p>
+
+      <div class="delete-buttons">
+        <button class="btn-delete-cancel" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-delete-disable" (click)="disableAsesor()">
+          🔒 Desabilitar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL ACTIVAR ASESOR -->
+  <div class="modal-overlay" *ngIf="showActivateModal">
+    <div class="modal-backdrop" (click)="closeActivateModal()"></div>
+    <div class="modal-card modal-activate animate-fade">
+
+      <div class="activate-icon">✅</div>
+      <h2 class="activate-title">¿Habilitar Asesor?</h2>
+      <p class="activate-message">
+        ¿Está seguro de que desea volver a habilitar a <strong>{{ asesorAActivar?.nombre }} {{ asesorAActivar?.apellido }}</strong>?
+      </p>
+
+      <div class="activate-buttons">
+        <button class="btn-activate-cancel" (click)="cancelActivate()">No</button>
+        <button class="btn-activate-confirm" (click)="confirmActivate()">
+          🔓 Sí, Habilitar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

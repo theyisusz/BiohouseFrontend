@@ -1,0 +1,32 @@
+ <div #modelado id="divModelado"  >
+    <div id="tools">
+      <app-actions-model id="actionsModel"></app-actions-model>
+    </div>
+</div>
+
+<!-- Botones flotantes 2D (fuera del contenedor con overflow:hidden) -->
+<ng-container *ngFor="let button of activeButtons">
+  <div
+    class="floatingButton"
+    [style.left.px]="button.screenX"
+    [style.top.px]="button.screenY"
+    *ngIf="button.visible"
+  >
+    <button (click)="onFloatingButtonClick(button)">+</button>
+  </div>
+</ng-container>
+
+<!-- Menú contextual de clic derecho -->
+<div
+  id="contextMenu"
+  *ngIf="showContextMenu"
+  [style.left.px]="contextMenuX"
+  [style.top.px]="contextMenuY"
+>
+  <div class="ctx-header">Bloque seleccionado</div>
+  <button class="ctx-item ctx-delete" (click)="deleteContextBlock()">
+    🗑 Eliminar bloque
+  </button>
+</div>
+
+

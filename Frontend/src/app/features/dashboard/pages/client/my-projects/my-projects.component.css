@@ -1,0 +1,355 @@
+/* ANIMACIÓN */
+.animate-fade {
+  animation: fadeInUp 0.4s ease both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project-card:nth-child(1) { animation-delay: 0s; }
+.project-card:nth-child(2) { animation-delay: 0.08s; }
+.project-card:nth-child(3) { animation-delay: 0.16s; }
+
+/* CONTENEDOR */
+.projects-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+/* ENCABEZADO */
+.projects-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.projects-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.projects-subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0.3rem 0 0;
+  font-weight: 400;
+}
+
+.btn-new {
+  background: #34a853;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 4px 14px rgba(52, 168, 83, 0.35);
+}
+
+.btn-new:hover {
+  background: #2d9247;
+  transform: translateY(-1px);
+}
+
+/* FILTROS */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 999px;
+  padding: 0.65rem 1.25rem;
+  transition: border-color 0.2s;
+}
+
+.search-box:focus-within {
+  border-color: #34a853;
+}
+
+.search-icon {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.875rem;
+  color: #334155;
+  background: transparent;
+}
+
+/* GRID */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.75rem;
+}
+
+/* CARD */
+.project-card {
+  background: white;
+  border: 1px solid #e8edf2;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.project-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.09);
+  transform: translateY(-3px);
+}
+
+/* CARD HEADER */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.project-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* BADGE */
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+  margin-top: 2px;
+}
+
+.badge-completado {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge-proceso {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.badge-borrador {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+/* DATOS */
+.project-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0.5rem 1.5rem;
+}
+
+.data-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.data-item:last-child {
+  border-bottom: none;
+}
+
+.data-icon {
+  font-size: 0.9rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.data-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  flex: 1;
+  font-weight: 400;
+}
+
+.data-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ACCIONES */
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-primary {
+  background: #34a853;
+  color: white;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: #2d9247;
+}
+
+.btn-secondary {
+  background: white;
+  color: #475569;
+  border: 1.5px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  border-color: #34a853;
+  color: #34a853;
+  background: #f0fdf4;
+}
+
+.btn-delete {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #cbd5e1;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  transition: color 0.2s, background 0.2s;
+  line-height: 1;
+}
+
+.btn-delete:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+/* MODAL ELIMINAR */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 1.25rem;
+  padding: 0;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  background: linear-gradient(to right, #ef4444, #f87171);
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modal-text {
+  padding: 1.25rem 1.5rem;
+  font-size: 0.875rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1.1rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f1f5f9;
+}
+
+.btn-confirm {
+  padding: 0.5rem 1.1rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-confirm:hover {
+  background: #dc2626;
+}

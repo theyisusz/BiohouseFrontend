@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-vq65v0hxzkvb44f0.us.auth0.com/
+          jwk-set-uri: https://dev-vq65v0hxzkvb44f0.us.auth0.com/.well-known/jwks.json
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth_service_route
+              uri: http://localhost:5000
+              predicates:
+                - Path=/api/v1/usuarios/**  
+
+auth0:
+  audience: https://BioHouse.com
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
+    reactor.netty: DEBUG

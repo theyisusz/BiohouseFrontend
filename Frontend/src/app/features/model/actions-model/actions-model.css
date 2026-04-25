@@ -1,0 +1,416 @@
+:root {
+  --nat-1: #38752E;
+  /* Verde muy oscuro */
+  --nat-2: #B6F7AA;
+  /* Verde claro */
+  --nat-3: #76F55F;
+  /* Verde brillante */
+  --nat-4: #567551;
+  /* Verde mate */
+  --nat-5: #5DC24C;
+  /* Verde medio */
+  --white: #ffffff;
+  --black: #000000;
+}
+
+/* Contenedor General */
+#actionButons {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Barra de Navegación Central */
+.center-nav {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  background-color: var(--nat-1);
+  padding: 10px 25px;
+  border-radius: 12px;
+  border: 1px solid var(--nat-4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Botones Principales con Gradiente */
+.action-button.main-dark {
+  width: 50px;
+  height: 50px;
+  /* Gradiente solicitado */
+  background: linear-gradient(135deg, #34a853 0%, #2d9547 40%, #b4d435 100%);
+  border: 2px solid var(--nat-1);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.action-button.main-dark:hover {
+  filter: brightness(1.1);
+  border-color: var(--white);
+}
+
+/* Estado activo en Blanco */
+.action-button.main-dark.active {
+  background: var(--white);
+  border-color: var(--nat-2);
+  box-shadow: 0 0 15px var(--nat-3);
+}
+
+/* Invertir color de icono si el fondo es blanco (opcional) */
+.action-button.main-dark.active img {
+  filter: invert(1) brightness(0.5);
+}
+
+.action-button img {
+  width: 26px;
+}
+
+/* Panel Lateral Agrupado */
+.side-panel {
+  position: absolute;
+  top: 90px;
+  left: 20px;
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--nat-1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 220px;
+}
+
+#opacityControl {
+  color: var(--nat-2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+#opacityControl input {
+  cursor: pointer;
+  accent-color: var(--nat-3);
+}
+
+.guias-btn {
+  width: 100%;
+  background-color: var(--nat-1);
+  color: var(--white);
+  border: 1px solid var(--nat-5);
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.guias-btn.active {
+  background-color: var(--nat-3);
+  color: var(--black);
+}
+
+#metricas {
+  color: var(--nat-2);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  border-top: 1px solid var(--nat-4);
+  padding-top: 10px;
+}
+
+/* ─── Selector de Pisos ──────────────────────────────────────── */
+
+#floorSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.panel-label {
+  color: var(--nat-2);
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.floor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.floor-tab {
+  flex: 1 1 calc(33% - 5px);
+  min-width: 48px;
+  padding: 6px 4px;
+  background-color: var(--nat-4);
+  color: var(--white);
+  border: 1px solid var(--nat-1);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: bold;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.floor-tab:hover {
+  background-color: var(--nat-5);
+  border-color: var(--nat-2);
+}
+
+.floor-tab.active {
+  background: linear-gradient(135deg, #34a853 0%, #b4d435 100%);
+  color: var(--black);
+  border-color: var(--nat-2);
+  box-shadow: 0 0 8px rgba(182, 247, 170, 0.5);
+}
+
+.add-floor-btn {
+  width: 100%;
+  padding: 8px;
+  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+  color: var(--white);
+  border: 1px solid #3b82f6;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+.add-floor-btn:hover:not(:disabled) {
+  filter: brightness(1.15);
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+
+.add-floor-btn:disabled {
+  background: #444;
+  border-color: #555;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Submenús alineados con Tipografía Negra */
+.has-submenu {
+  position: relative;
+}
+
+.decoration-submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 10px;
+  background-color: var(--white);
+  /* Fondo claro para que resalte el texto negro */
+  border: 2px solid var(--nat-1);
+  padding: 6px;
+  border-radius: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 120px;
+  z-index: 1001;
+}
+
+.decoration-submenu.open {
+  display: flex;
+}
+
+/* 1. Botones de decoración con fondo negro */
+.decoration-button {
+  background-color: #ffffff !important; 
+  color: #000000 !important; 
+  border: 1px solid var(--nat-1);
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.decoration-button:hover {
+  background-color: var(--nat-1);
+  color: var(--white);
+}
+
+/* 2. Color diferente para guías activas (Naranja brillante para resaltar) */
+.guias-btn.active {
+  background-color: #ff9800; 
+  color: var(--white);
+  border-color: #f57c00;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.4);
+}
+
+/* 3. Estilos para el Modal de Confirmación */
+.confirm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  pointer-events: auto;
+}
+
+.confirm-modal {
+  background: var(--nat-1);
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid var(--nat-2);
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.confirm-modal h3 {
+  color: var(--white);
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-confirm, .btn-cancel {
+  padding: 10px 25px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-confirm {
+  background-color: var(--nat-3);
+  color: var(--black);
+}
+
+.btn-cancel {
+  background-color: #ff5252;
+  color: var(--white);
+}
+
+.btn-confirm:hover, .btn-cancel:hover {
+  transform: scale(1.05);
+}
+
+/* Tutoriales y Cámara */
+#tutorials {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  pointer-events: none;
+  /* Evita bloquear interacciones si no hay mensaje */
+}
+
+#messageBox {
+  /* Fondo negro sólido con ligera transparencia para profundidad */
+  background-color: rgba(0, 0, 0, 0.9);
+
+  /* Texto en verde claro de la paleta para coherencia visual */
+  color: var(--nat-2);
+
+  padding: 15px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--nat-1);
+  /* Borde verde oscuro para definir el área */
+
+  max-width: 300px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.4;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+
+  /* Animación de visibilidad */
+  display: none;
+  pointer-events: auto;
+}
+
+#messageBox.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#camare {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.camera-info-panel {
+  /* Fondo blanco sólido garantizado */
+  background-color: #ffffff !important; 
+  color: #000000;
+  
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 2px solid var(--nat-1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  max-width: 380px;
+  pointer-events: auto;
+  z-index: 1001;
+}
+
+.info-icon {
+  width: 32px;
+  height: 32px;
+  /* Si el icono original es blanco, esto lo volverá negro */
+  filter: brightness(0); 
+}
+
+.camera-info-panel p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  font-family: sans-serif;
+}
+
+.camera-info-panel strong {
+  color: var(--nat-1);
+  font-weight: 700;
+}

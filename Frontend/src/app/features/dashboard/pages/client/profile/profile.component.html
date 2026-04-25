@@ -1,0 +1,238 @@
+<div class="profile-container animate-fade">
+
+  <!-- ENCABEZADO -->
+  <div class="profile-header">
+    <div>
+      <h1 class="profile-title">Mi Perfil</h1>
+      <p class="profile-subtitle">Gestiona tu información personal</p>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- COLUMNA IZQUIERDA — Avatar + resumen -->
+    <div class="profile-sidebar">
+
+      <div class="avatar-card">
+        <div class="avatar-circle">
+          {{ getInitials() }}
+        </div>
+        <h2 class="avatar-name">{{ user.nombre }} {{ user.apellido }}</h2>
+        <p class="avatar-email">{{ user.correo }}</p>
+        <span class="avatar-badge">Cliente</span>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-card">
+        <h3 class="stats-title">Actividad</h3>
+
+        <div class="stat-item">
+          <span class="stat-icon">📁</span>
+          <div>
+            <p class="stat-label">Proyectos creados</p>
+            <p class="stat-value">{{ user.proyectos }}</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <span class="stat-icon">📅</span>
+          <div>
+            <p class="stat-label">Fecha de registro</p>
+            <p class="stat-value">{{ user.fechaRegistro }}</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <span class="stat-icon">🕐</span>
+          <div>
+            <p class="stat-label">Última sesión</p>
+            <p class="stat-value">{{ user.ultimaSesion }}</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA — Formulario -->
+    <div class="profile-main">
+
+      <!-- INFORMACIÓN PERSONAL -->
+      <div class="form-card">
+
+        <div class="form-card-header">
+          <div>
+            <h3 class="form-card-title">Información personal</h3>
+            <p class="form-card-subtitle">
+              {{ editMode ? 'Edita tus datos y guarda los cambios' : 'Revisa tu información personal' }}
+            </p>
+          </div>
+          <button class="btn-edit" *ngIf="!editMode" (click)="enableEdit()">
+            ✏️ Editar
+          </button>
+        </div>
+
+        <div class="form-grid">
+
+          <!-- NOMBRE -->
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input
+              class="form-input"
+              [class.editable]="editMode"
+              [class.input-error]="errors['nombre']"
+              [readonly]="!editMode"
+              [(ngModel)]="editData.nombre"
+              maxlength="30"
+              placeholder="Tu nombre"
+            />
+            <span class="error-msg" *ngIf="errors['nombre']">
+              {{ errors['nombre'] }}
+            </span>
+          </div>
+
+          <!-- APELLIDO -->
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input
+              class="form-input"
+              [class.editable]="editMode"
+              [class.input-error]="errors['apellido']"
+              [readonly]="!editMode"
+              [(ngModel)]="editData.apellido"
+              maxlength="30"
+              placeholder="Tu apellido"
+            />
+            <span class="error-msg" *ngIf="errors['apellido']">
+              {{ errors['apellido'] }}
+            </span>
+          </div>
+
+          <!-- CORREO -->
+          <div class="form-group full-width">
+            <label class="form-label">Correo electrónico</label>
+            <input
+              class="form-input"
+              [class.editable]="editMode"
+              [class.input-error]="errors['correo']"
+              [readonly]="!editMode"
+              [(ngModel)]="editData.correo"
+              maxlength="60"
+              placeholder="tu@correo.com"
+              type="email"
+            />
+            <span class="error-msg" *ngIf="errors['correo']">
+              {{ errors['correo'] }}
+            </span>
+          </div>
+
+          <!-- TELÉFONO -->
+          <div class="form-group full-width">
+            <label class="form-label">Teléfono</label>
+            <input
+              class="form-input"
+              [class.editable]="editMode"
+              [class.input-error]="errors['telefono']"
+              [readonly]="!editMode"
+              [(ngModel)]="editData.telefono"
+              maxlength="15"
+              placeholder="+57 300 000 0000"
+              type="tel"
+            />
+            <span class="error-msg" *ngIf="errors['telefono']">
+              {{ errors['telefono'] }}
+            </span>
+          </div>
+
+        </div>
+
+        <!-- BOTONES EDICIÓN -->
+        <div class="form-actions" *ngIf="editMode">
+          <button class="btn-cancel-edit" (click)="cancelEdit()">Cancelar</button>
+          <button class="btn-save" (click)="saveChanges()">Guardar cambios</button>
+        </div>
+
+      </div>
+
+      <!-- CAMBIAR CONTRASEÑA -->
+      <div class="form-card">
+
+        <div class="form-card-header">
+          <div>
+            <h3 class="form-card-title">Seguridad</h3>
+            <p class="form-card-subtitle">Cambia tu contraseña cuando quieras</p>
+          </div>
+          <button class="btn-edit" *ngIf="!passwordMode" (click)="passwordMode = true">
+            🔒 Cambiar
+          </button>
+        </div>
+
+        <div *ngIf="passwordMode" class="form-grid">
+
+          <!-- CONTRASEÑA ACTUAL -->
+          <div class="form-group full-width">
+            <label class="form-label">Contraseña actual</label>
+            <input
+              class="form-input editable"
+              [class.input-error]="passwordErrors['actual']"
+              type="password"
+              [(ngModel)]="passwordData.actual"
+              maxlength="30"
+              placeholder="••••••••"
+            />
+            <span class="error-msg" *ngIf="passwordErrors['actual']">
+              {{ passwordErrors['actual'] }}
+            </span>
+          </div>
+
+          <!-- NUEVA CONTRASEÑA -->
+          <div class="form-group">
+            <label class="form-label">Nueva contraseña</label>
+            <input
+              class="form-input editable"
+              [class.input-error]="passwordErrors['nueva']"
+              type="password"
+              [(ngModel)]="passwordData.nueva"
+              maxlength="30"
+              placeholder="••••••••"
+            />
+            <span class="error-msg" *ngIf="passwordErrors['nueva']">
+              {{ passwordErrors['nueva'] }}
+            </span>
+          </div>
+
+          <!-- CONFIRMAR CONTRASEÑA -->
+          <div class="form-group">
+            <label class="form-label">Confirmar contraseña</label>
+            <input
+              class="form-input editable"
+              [class.input-error]="passwordErrors['confirmar']"
+              type="password"
+              [(ngModel)]="passwordData.confirmar"
+              maxlength="30"
+              placeholder="••••••••"
+            />
+            <span class="error-msg" *ngIf="passwordErrors['confirmar']">
+              {{ passwordErrors['confirmar'] }}
+            </span>
+          </div>
+
+          <!-- BOTONES CONTRASEÑA -->
+          <div class="form-actions full-width">
+            <button class="btn-cancel-edit" (click)="cancelPassword()">Cancelar</button>
+            <button class="btn-save" (click)="savePassword()">Actualizar contraseña</button>
+          </div>
+
+        </div>
+
+        <p class="password-hint" *ngIf="!passwordMode">
+          🔐 Tu contraseña está protegida. Cámbiala regularmente para mayor seguridad.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

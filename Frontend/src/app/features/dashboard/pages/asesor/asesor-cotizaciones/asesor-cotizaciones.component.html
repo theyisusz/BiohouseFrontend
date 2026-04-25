@@ -1,0 +1,138 @@
+<div class="cotizaciones-container animate-fade">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Cotizaciones</h1>
+      <p class="page-subtitle">Gestiona y actualiza el estado de las cotizaciones</p>
+    </div>
+    <div class="header-stat">
+      <span class="header-stat-value">{{ cotizaciones.length }}</span>
+      <span class="header-stat-label">cotizaciones</span>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Buscar por cliente o proyecto..."
+        [(ngModel)]="searchTerm" class="search-input"/>
+    </div>
+    <div class="search-box select-box">
+      <span class="search-icon">🔽</span>
+      <select [(ngModel)]="selectedEstado" class="search-input">
+        <option value="">Todos los estados</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="En contacto">En contacto</option>
+        <option value="En negociación">En negociación</option>
+        <option value="Cerrado">Cerrado</option>
+        <option value="Rechazado">Rechazado</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-card">
+
+    <div class="empty-state" *ngIf="filteredCotizaciones.length === 0">
+      <p class="empty-icon">📄</p>
+      <p class="empty-text">No se encontraron cotizaciones.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="filteredCotizaciones.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Proyecto</th>
+            <th>Costo total</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cot of filteredCotizaciones">
+            <td><span class="id-cell">#{{ cot.id }}</span></td>
+            <td>
+              <div class="client-info">
+                <div class="client-avatar">{{ getInitials(cot.cliente) }}</div>
+                <div>
+                  <p class="client-name">{{ cot.cliente }}</p>
+                  <p class="client-email">{{ cot.correo }}</p>
+                </div>
+              </div>
+            </td>
+            <td><span class="project-name">{{ cot.proyecto }}</span></td>
+            <td><span class="costo-value">${{ cot.costoTotal | number }}</span></td>
+            <td><span class="fecha-text">{{ cot.fecha }}</span></td>
+            <td>
+              <span class="badge" [ngClass]="getBadgeClass(cot.estado)">
+                {{ cot.estado }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action btn-estado"
+                      (click)="openEstadoModal(cot)"
+                      title="Cambiar estado">
+                ✏️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MODAL CAMBIAR ESTADO -->
+  <div class="modal-overlay" *ngIf="showEstadoModal">
+    <div class="modal-backdrop" (click)="closeEstadoModal()"></div>
+    <div class="modal-card animate-fade">
+
+      <div class="modal-header-green">
+        <h2 class="modal-title">Cambiar estado</h2>
+      </div>
+
+      <div class="modal-body" *ngIf="cotizacionToEdit">
+        <p class="estado-subtitle">
+          Cotización de <strong>{{ cotizacionToEdit.cliente }}</strong>
+        </p>
+
+        <div class="estado-options">
+          <label class="estado-option" [class.selected]="newEstado === 'Pendiente'">
+            <input type="radio" [(ngModel)]="newEstado" value="Pendiente"/>
+            <span class="estado-dot dot-pendiente"></span>
+            Pendiente
+          </label>
+          <label class="estado-option" [class.selected]="newEstado === 'En contacto'">
+            <input type="radio" [(ngModel)]="newEstado" value="En contacto"/>
+            <span class="estado-dot dot-contacto"></span>
+            En contacto
+          </label>
+          <label class="estado-option" [class.selected]="newEstado === 'En negociación'">
+            <input type="radio" [(ngModel)]="newEstado" value="En negociación"/>
+            <span class="estado-dot dot-negociacion"></span>
+            En negociación
+          </label>
+          <label class="estado-option" [class.selected]="newEstado === 'Cerrado'">
+            <input type="radio" [(ngModel)]="newEstado" value="Cerrado"/>
+            <span class="estado-dot dot-cerrado"></span>
+            Cerrado
+          </label>
+          <label class="estado-option" [class.selected]="newEstado === 'Rechazado'">
+            <input type="radio" [(ngModel)]="newEstado" value="Rechazado"/>
+            <span class="estado-dot dot-rechazado"></span>
+            Rechazado
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeEstadoModal()">Cancelar</button>
+        <button class="btn-save-modal" (click)="saveEstado()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
