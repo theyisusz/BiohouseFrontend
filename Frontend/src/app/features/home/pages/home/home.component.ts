@@ -83,6 +83,6 @@ export class HomeComponent {
   }
 
   goToRegister() {
-    this.router.navigate(['/register']);
+    //this.router.navigate(['/register']);
   }
 }
