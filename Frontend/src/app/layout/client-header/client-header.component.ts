@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+
 @Component({
   selector: 'app-client-header',
   imports: [CommonModule],
@@ -11,7 +13,9 @@ export class ClientHeaderComponent {
 menuOpen = false;
   showLogoutModal = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+    private authService: AuthService
+  ) {}
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -29,7 +33,7 @@ menuOpen = false;
 
   confirmLogout() {
     this.showLogoutModal = false;
-    this.router.navigate(['/']);
+    this.authService.logout();
   }
 
   goToHome() {

@@ -1,25 +1,7 @@
-export interface LoginRequest {
-  correo: string;
-  password: string;
-}
-
-export interface RegisterRequest {
+export interface RegistroUsuarioAuth0DTO {
+  email: string;
   nombre: string;
-  apellido: string;
-  correo: string;
-  telefono: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  usuario: {
-    id: number;
-    nombre: string;
-    apellido: string;
-    correo: string;
-    rol: string;
-  };
+  apellido?: string;
+  imagenUrl?: string;
+  telefono?: string;
 }

@@ -1,24 +1,19 @@
 export interface Usuario {
   id: number;
+  auth0Id: string;
   nombre: string;
   apellido: string;
-  correo: string;
+  email: string;
   telefono: string;
-  rol: RolEnum;
+  imagenUrl?: string;
+  role: RolEnum;
   fechaRegistro: string;
   ultimaSesion: string;
-  estado: EstadoUsuarioEnum;
+  estado: boolean;
 }
 
 export enum RolEnum {
-  CLIENTE          = 'CLIENTE',
-  ADMINISTRADOR    = 'ADMINISTRADOR',
-  ASESOR_COMERCIAL = 'ASESOR_COMERCIAL',
-  INVITADO         = 'INVITADO'
-}
-
-export enum EstadoUsuarioEnum {
-  ACTIVO    = 'Activo',
-  INACTIVO  = 'Inactivo',
-  BLOQUEADO = 'Bloqueado'
+  ADMIN   = 'ADMIN',
+  ASESOR  = 'ASESOR',
+  CLIENTE = 'CLIENTE',
 }
